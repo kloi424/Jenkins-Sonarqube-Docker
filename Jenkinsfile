@@ -4,7 +4,9 @@ pipeline {
     environment {
         SONARQUBE_SERVER = 'Sonar-server' // Must match name in Jenkins > Configure System > SonarQube servers
     }
- 
+     tools {
+        sonarQubeScanner 'SonarScanner' // This activates the scanner tool
+    }
     stages {
         stage('Checkout') {
             steps {
