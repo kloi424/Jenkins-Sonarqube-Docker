@@ -2,11 +2,9 @@ pipeline {
     agent any
  
     environment {
-        SONARQUBE_SERVER = 'Sonar-server' // Must match name in Jenkins > Configure System > SonarQube servers
+        SONARQUBE_SERVER = 'Sonar-server' // Must match the name in Jenkins configuration
     }
-     tools {
-        sonarQubeScanner 'SonarScanner' // This activates the scanner tool
-    }
+ 
     stages {
         stage('Checkout') {
             steps {
@@ -16,7 +14,7 @@ pipeline {
  
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv("Sonar-server") {
+                withSonarQubeEnv("${env.SONARQUBE_SERVER}") {
                     sh '''
                         sonar-scanner \
                           -Dsonar.projectKey=Onix-Website \
