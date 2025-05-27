@@ -1,29 +1,31 @@
 pipeline {
     agent any
- 
+
     environment {
-        SONARQUBE_SERVER = 'Sonar-server' // Must match the name in Jenkins configuration
+        SONARQUBE_SERVER = 'Sonar-server' // Name configured in Jenkins > Manage Jenkins > Configure System
     }
- 
+
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/kloi424/Jenkins-Sonarqube-Docker.git'
             }
         }
- 
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('Sonar-server') {
-                        sh "/var/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarScanner/bin/sonar-scanner \
-                        -Dsonar.projectKey=Onix-Website \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=http://16.171.112.147:9000/ \
-                        -Dsonar.login=sqa_6ad09254c0edad142ada65487d355756e799629c"
+                    sh '''
+                        sonar-scanner \
+                          -Dsonar.projectKey=Onix-Website \
+                          -Dsonar.sources=. \
+                          -Dsonar.host.url=http://16.171.112.147:9000/ \
+                          -Dsonar.login=sqa_6ad09254c0edad142ada65487d355756e799629c
+                    '''
                 }
             }
         }
- 
+
         stage('Quality Gate') {
             steps {
                 timeout(time: 1, unit: 'MINUTES') {
@@ -32,7 +34,7 @@ pipeline {
             }
         }
     }
- 
+
     post {
         success {
             echo 'SonarQube analysis passed!'
