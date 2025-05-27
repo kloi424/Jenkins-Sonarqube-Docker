@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/kloi424/Jenkins-Sonarqube-Docker'
+                git branch: 'main', url: 'https://github.com/kloi424/Jenkins-Sonarqube-Docker.git'
             }
         }
  
