@@ -14,14 +14,12 @@ pipeline {
  
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv("${env.SONARQUBE_SERVER}") {
-                    sh '''
-                        sonar-scanner \
-                          -Dsonar.projectKey=Onix-Website \
-                          -Dsonar.sources=. \
-                          -Dsonar.host.url=http://16.171.112.147:9000/ \
-                          -Dsonar.login=sqa_6ad09254c0edad142ada65487d355756e799629c
-                    '''
+                withSonarQubeEnv('Sonar-server') {
+                        sh "/var/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarScanner/bin/sonar-scanner \
+                        -Dsonar.projectKey=Onix-Website \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://16.171.112.147:9000/ \
+                        -Dsonar.login=sqa_6ad09254c0edad142ada65487d355756e799629c"
                 }
             }
         }
