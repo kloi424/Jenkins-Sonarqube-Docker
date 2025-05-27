@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+ 
+    environment {
+        SONARQUBE_SERVER = 'Sonar-server' // Must match name in Jenkins > Configure System > SonarQube servers
+    }
+ 
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/kloi424/Jenkins-Sonarqube-Docker'
+            }
+        }
+ 
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv("Sonar-server") {
+                    sh '''
+                        sonar-scanner \
+                          -Dsonar.projectKey=Onix-Website \
+                          -Dsonar.sources=. \
+                          -Dsonar.host.url=http://16.171.112.147:9000/ \
+                          -Dsonar.login=sqa_6ad09254c0edad142ada65487d355756e799629c
+                    '''
+                }
+            }
+        }
+ 
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    }
+ 
+    post {
+        success {
+            echo 'SonarQube analysis passed!'
+        }
+        failure {
+            echo 'SonarQube analysis failed or Quality Gate failed.'
+        }
+    }
+}
