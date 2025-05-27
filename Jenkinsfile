@@ -16,7 +16,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('Sonar-server') {
                     sh '''
-                        sonar-scanner \
+                        /opt/sonar-scanner/bin/sonar-scanner \
                           -Dsonar.projectKey=Onix-Website \
                           -Dsonar.sources=. \
                           -Dsonar.host.url=http://16.171.112.147:9000/ \
